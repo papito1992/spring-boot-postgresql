@@ -42,7 +42,7 @@ public class SignupRequest {
     public String toString() {
         return "SignupRequest{" +
                 "username='" + username + '\'' +
-
+                "password='" + password + '\'' +
                 '}';
     }
 }

@@ -22,7 +22,7 @@ public class User {
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 30)
     @Column(nullable = false)
     private String username;
 
@@ -42,7 +42,7 @@ public class User {
         this.password = password;
     }
 
-	public Set<Role> getRoles() {
+    public Set<Role> getRoles() {
 		return roles;
 	}
 

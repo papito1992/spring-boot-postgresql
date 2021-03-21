@@ -13,6 +13,7 @@ import com.alpaka.repository.UserRepository;
 import com.alpaka.security.jwt.JwtUtils;
 import com.alpaka.security.services.UserDetailsImpl;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,13 +26,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//@Slf4j
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
-@Log4j2
 public class AuthController {
 
     @Autowired
@@ -50,16 +51,14 @@ public class AuthController {
     private JwtUtils jwtUtils;
 
     @PostMapping("/signin")
-    @CrossOrigin(origins = "http://localhost:8081")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         log.info("Singing IN : {}", loginRequest.getUsername());
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
@@ -72,6 +71,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (signUpRequest.getUsername() == null
         ) {
@@ -87,7 +87,6 @@ public class AuthController {
         User user = new User();
         user.setUsername(signUpRequest.getUsername());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
-
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
@@ -121,9 +120,8 @@ public class AuthController {
                 }
             });
         }
-
         user.setRoles(roles);
         userRepository.save(user);
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return authenticateUser(new LoginRequest(user.getUsername(), signUpRequest.getPassword()));
     }
 }

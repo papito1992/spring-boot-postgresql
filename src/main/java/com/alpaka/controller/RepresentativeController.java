@@ -19,26 +19,26 @@ public class RepresentativeController {
     private RepresentativeService representativeService;
 
     @GetMapping("/representatives")
-    @CrossOrigin(origins = "http://localhost:8081")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<Representative>> getRepresentativeList() {
         return representativeService.getRepresentativeList();
     }
 
     @GetMapping("/representatives/{id}")
-    @CrossOrigin(origins = "http://localhost:8081")
+    @CrossOrigin(origins = "http://localhost:3000")
     public Representative getRepresentativeById(@PathVariable("id") String isbn) {
         return representativeService.getRepresentative(isbn);
     }
 
     @PostMapping("/representatives")
-    @CrossOrigin(origins = "http://localhost:8081")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> createRepresentative(@Valid @RequestBody Representative representative) {
         return representativeService.createRepresentative(representative);
 
     }
 
     @DeleteMapping("/representative/{id}")
-    @CrossOrigin(origins = "http://localhost:8081")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<HttpStatus> deleteRepresentative(@PathVariable("id") String id) {
         return representativeService.deleteRepresentative(Long.valueOf(id));
     }

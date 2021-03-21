@@ -1,10 +1,12 @@
 package com.alpaka.service;
 
+import com.alpaka.dtos.response.MessageResponse;
 import com.alpaka.exceptions.EntityNotFoundException;
 import com.alpaka.exceptions.Error;
 import com.alpaka.model.customer.Customer;
 import com.alpaka.model.representative.Representative;
 import com.alpaka.repository.CustomerRepository;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.JDBCException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,17 @@ public class CustomerService extends Throwable {
         }
     }
 
+//    @SneakyThrows
+//    public Customer getCustomerByUsername(String username) {
+//        try {
+//            Customer customer = customerRepository.findByUsername(username);
+//            return customer;
+//        } catch (Exception e) {
+//            log.error(e.getLocalizedMessage());
+//            throw new Exception(e.getLocalizedMessage());
+//        }
+//    }
+
     public ResponseEntity<?> createCustomer(Customer customer) throws SQLException {
         Representative representative = new Representative();
         Customer _customer = new Customer();
@@ -84,19 +97,21 @@ public class CustomerService extends Throwable {
         }
     }
 
-    public void deleteCustomer(Long id) {
+    public ResponseEntity<?> deleteCustomer(Long id) {
         try {
-            log.info(id);
             if (customerRepository.existsById(id)) {
                 customerRepository.deleteById(id);
             } else {
-                throw new EntityNotFoundException(Customer.class, "Could not delete customer!");
+                MessageResponse messageResponse = new MessageResponse("deleted NOK");
+                return ResponseEntity.badRequest().body(messageResponse);
             }
         } catch (Exception e) {
             log.warn("Failed to delete customer with id: {}", id);
             log.warn(e.getMessage());
             throw new EntityNotFoundException(Customer.class, "Could not delete this customer!");
         }
+        MessageResponse messageResponse = new MessageResponse("deleted OK");
+        return ResponseEntity.ok().body(messageResponse);
     }
 
     public ResponseEntity<?> deleteCustomerRepresentative(Long id) {
@@ -140,6 +155,8 @@ public class CustomerService extends Throwable {
             // checks if representative exists
             representativeService.getRepresentative(updatedCustomerData.getRepresentativeIsbn());
 
+            existingCustomer.setUsername(updatedCustomerData.getUsername());
+            existingCustomer.setEmail(updatedCustomerData.getEmail());
             existingCustomer.setRepresentativeIsbn(updatedCustomerData.getRepresentativeIsbn());
             existingCustomer.setHasRepresentation(updatedCustomerData.getHasRepresentation());
             customerRepository.save(existingCustomer);

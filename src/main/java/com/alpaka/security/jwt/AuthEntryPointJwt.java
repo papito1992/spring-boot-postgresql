@@ -19,7 +19,7 @@ import java.util.Map;
 @Log4j2
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
-//    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)

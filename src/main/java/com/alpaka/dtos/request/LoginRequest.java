@@ -1,7 +1,12 @@
 package com.alpaka.dtos.request;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotBlank;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginRequest {
 	@NotBlank
 	private String username;
