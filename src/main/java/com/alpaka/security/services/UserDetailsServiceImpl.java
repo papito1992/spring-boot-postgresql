@@ -2,6 +2,9 @@ package com.alpaka.security.services;
 
 import com.alpaka.model.user.User;
 import com.alpaka.repository.UserRepository;
+import com.alpaka.security.jwt.JwtUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+    private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -23,8 +27,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
             return UserDetailsImpl.build(user);
         } catch (Exception e) {
-            throw new UsernameNotFoundException("User Not Found with username: " + username);
-//                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+            logger.info("User does not exist or is new user:" + username);
+            return null;
         }
     }
 

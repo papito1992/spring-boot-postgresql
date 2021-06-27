@@ -40,7 +40,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
                         userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//                LOG.info("Adding CORS Headers ........................");
                 response.setHeader("Access-Control-Allow-Origin", "*");
                 response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
                 response.setHeader("Access-Control-Max-Age", "3600");
@@ -54,9 +53,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             logger.error("Cannot set user authentication: {}", e);
         }
 
-
         filterChain.doFilter(mutableRequest, response);
-//        filterChain.doFilter(request, response);
     }
 
     private String parseJwt(HttpServletRequest request) {

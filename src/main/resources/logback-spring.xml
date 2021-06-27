@@ -41,7 +41,6 @@
     <!-- LOG "com.alpaka*" at TRACE level -->
     <logger name="com.alpaka" level="trace" additivity="false">
         <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
     </logger>
 
 </configuration>
